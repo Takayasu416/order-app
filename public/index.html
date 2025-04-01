@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ご注文をどうぞ！</title>
+    <!-- アイコン画像の設定 -->
+    <link rel="icon" href="icon.png" type="image/png">
+
+    <!-- アイコン画像の追加（iOS用） -->
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="overlay">送信中...</div>
     <h1>ご注文をどうぞ！</h1>
@@ -41,7 +49,7 @@
     </div>
     <script>
         const foodItems = [
-            { name: "唐揚げ", image: "dish1.jpg" },
+            { name: "肉じゃが", image: "/images/foods/bousai_nikujaga.png" },
             { name: "ハンバーグ", image: "dish2.jpg" },
             { name: "カレー", image: "dish3.jpg" },
             { name: "ピザ", image: "dish4.jpg" },
@@ -51,8 +59,8 @@
             { name: "天ぷら", image: "dish8.jpg" }
         ];
 
-        const drinkItems = [
-            { name: "ウーロン茶", image: "drink1.jpg" },
+        const drinkItems = 
+            { name: "ビール", image: "/images/drinks/drink_beer.png" },
             { name: "コーラ", image: "drink2.jpg" },
             { name: "アイスコーヒー", image: "drink3.jpg" },
             { name: "緑茶", image: "drink4.jpg" },
@@ -157,20 +165,20 @@
                 },
                 body: JSON.stringify({ order })
             })
-            .then(res => res.text())
-            .then(msg => {
-                alert(msg);
-                document.getElementById('orderList').innerHTML = '';
-                statusMessage.textContent = '送信完了！';
-            })
-            .catch(err => {
-                console.error(err);
-                alert('送信失敗: ' + err);
-                statusMessage.textContent = '送信に失敗しました';
-            })
-            .finally(() => {
-                overlay.style.display = 'none';
-            });
+                .then(res => res.text())
+                .then(msg => {
+                    alert(msg);
+                    document.getElementById('orderList').innerHTML = '';
+                    statusMessage.textContent = '送信完了！';
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('送信失敗: ' + err);
+                    statusMessage.textContent = '送信に失敗しました';
+                })
+                .finally(() => {
+                    overlay.style.display = 'none';
+                });
         }
 
 
@@ -186,4 +194,5 @@
         renderItems("drink", drinkItems, drinkPage);
     </script>
 </body>
+
 </html>
