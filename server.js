@@ -1,12 +1,21 @@
 const express = require('express');
+const path = require('path');
 const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// ★ HTMLとCSSを公開フォルダとして使う設定（重要！）
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ★ トップページ（index.html）を返す
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // メール送信設定
 const transporter = nodemailer.createTransport({
