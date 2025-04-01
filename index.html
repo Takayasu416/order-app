@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ご注文をどうぞ！</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="overlay">送信中...</div>
+    <h1>ご注文をどうぞ！</h1>
+    <div class="main-container">
+        <div class="left-content">
+            <div class="tabs">
+                <button class="tab-button active" onclick="showMenu('food')">フード</button>
+                <button class="tab-button" onclick="showMenu('drink')">ドリンク</button>
+            </div>
+            <div id="food" class="menu active">
+                <div id="foodItems" class="items"></div>
+                <div class="pagination">
+                    <button onclick="prevPage('food')">前へ</button>
+                    <span id="foodPage"></span>
+                    <button onclick="nextPage('food')">次へ</button>
+                </div>
+            </div>
+            <div id="drink" class="menu">
+                <div id="drinkItems" class="items"></div>
+                <div class="pagination">
+                    <button onclick="prevPage('drink')">前へ</button>
+                    <span id="drinkPage"></span>
+                    <button onclick="nextPage('drink')">次へ</button>
+                </div>
+            </div>
+        </div>
+        <div class="right-content">
+            <h2>注文リスト</h2>
+            <div class="order-list" id="orderList"></div>
+            <button class="order-button" onclick="placeOrder()">注文する</button>
+            <p id="statusMessage" style="margin-top: 20px; font-weight: bold;"></p>
+        </div>
+    </div>
+    <script>
+        const foodItems = [
+            { name: "唐揚げ", image: "dish1.jpg" },
+            { name: "ハンバーグ", image: "dish2.jpg" },
+            { name: "カレー", image: "dish3.jpg" },
+            { name: "ピザ", image: "dish4.jpg" },
+            { name: "うどん", image: "dish5.jpg" },
+            { name: "お寿司", image: "dish6.jpg" },
+            { name: "焼きそば", image: "dish7.jpg" },
+            { name: "天ぷら", image: "dish8.jpg" }
+        ];
+
+        const drinkItems = [
+            { name: "ウーロン茶", image: "drink1.jpg" },
+            { name: "コーラ", image: "drink2.jpg" },
+            { name: "アイスコーヒー", image: "drink3.jpg" },
+            { name: "緑茶", image: "drink4.jpg" },
+            { name: "オレンジジュース", image: "drink5.jpg" },
+            { name: "ミネラルウォーター", image: "drink6.jpg" },
+            { name: "レモネード", image: "drink7.jpg" },
+            { name: "カルピス", image: "drink8.jpg" }
+        ];
+
+        let foodPage = 0;
+        let drinkPage = 0;
+        const itemsPerPage = 6;
+
+        function renderItems(menu, items, page) {
+            const container = document.getElementById(menu + "Items");
+            container.innerHTML = "";
+            const start = page * itemsPerPage;
+            const end = start + itemsPerPage;
+            items.slice(start, end).forEach((itemData) => {
+                const div = document.createElement("div");
+                div.className = "item";
+                div.innerHTML = `
+                    <img src="images/${menu}s/${itemData.image}" alt="${itemData.name}" width="100">
+                    <p>${itemData.name}</p>
+                    <button onclick="addToOrder('${itemData.name}')">選択</button>
+                `;
+                container.appendChild(div);
+            });
+            document.getElementById(menu + "Page").textContent = `ページ ${page + 1}`;
+        }
+
+        function nextPage(menu) {
+            if (menu === "food" && (foodPage + 1) * itemsPerPage < foodItems.length) {
+                foodPage++;
+                renderItems("food", foodItems, foodPage);
+            } else if (menu === "drink" && (drinkPage + 1) * itemsPerPage < drinkItems.length) {
+                drinkPage++;
+                renderItems("drink", drinkItems, drinkPage);
+            }
+        }
+
+        function prevPage(menu) {
+            if (menu === "food" && foodPage > 0) {
+                foodPage--;
+                renderItems("food", foodItems, foodPage);
+            } else if (menu === "drink" && drinkPage > 0) {
+                drinkPage--;
+                renderItems("drink", drinkItems, drinkPage);
+            }
+        }
+
+        function addToOrder(dish) {
+            const orderList = document.getElementById('orderList');
+
+            const item = document.createElement('div');
+            item.style.display = 'flex';
+            item.style.justifyContent = 'space-between';
+            item.style.alignItems = 'center';
+            item.style.margin = '5px 0';
+            item.style.gap = '10px';
+
+            const name = document.createElement('span');
+            name.textContent = dish;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '×';
+            removeBtn.style.marginLeft = '10px';
+            removeBtn.style.backgroundColor = '#e74c3c';
+            removeBtn.style.color = 'white';
+            removeBtn.style.border = 'none';
+            removeBtn.style.borderRadius = '50%';
+            removeBtn.style.padding = '10px 16px';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.style.fontSize = '20px';
+            removeBtn.style.lineHeight = '1';
+            removeBtn.onclick = () => orderList.removeChild(item);
+
+            item.appendChild(name);
+            item.appendChild(removeBtn);
+            orderList.appendChild(item);
+        }
+
+        function placeOrder() {
+            const orderList = document.querySelectorAll('#orderList div span');
+            const order = Array.from(orderList).map(item => item.textContent).join('\n');
+
+            const statusMessage = document.getElementById('statusMessage');
+            const overlay = document.getElementById('overlay');
+            statusMessage.textContent = '';
+
+            if (order === '') {
+                alert('注文リストが空です。');
+                return;
+            }
+
+            overlay.style.display = 'flex';
+
+            fetch('http://localhost:3000/send-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ order })
+            })
+            .then(res => res.text())
+            .then(msg => {
+                alert(msg);
+                document.getElementById('orderList').innerHTML = '';
+                statusMessage.textContent = '送信完了！';
+            })
+            .catch(err => {
+                console.error(err);
+                alert('送信失敗: ' + err);
+                statusMessage.textContent = '送信に失敗しました';
+            })
+            .finally(() => {
+                overlay.style.display = 'none';
+            });
+        }
+
+
+        function showMenu(menu) {
+            document.querySelectorAll('.menu').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            document.getElementById(menu).classList.add('active');
+            event.target.classList.add('active');
+            renderItems(menu, menu === "food" ? foodItems : drinkItems, menu === "food" ? foodPage : drinkPage);
+        }
+
+        renderItems("food", foodItems, foodPage);
+        renderItems("drink", drinkItems, drinkPage);
+    </script>
+</body>
+</html>
