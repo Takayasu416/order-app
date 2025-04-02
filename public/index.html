@@ -47,16 +47,23 @@
         </div>
     </div>
     <script>
-        const foodItems = [
-            { name: "肉じゃが", image: "bousai_nikujaga.png" },
-            { name: "ハンバーグ", image: "dish2.jpg" },
-            { name: "カレー", image: "food_curryrice_white.png" },
-            { name: "ピザ", image: "dish4.jpg" },
-            { name: "うどん", image: "dish5.jpg" },
-            { name: "お寿司", image: "dish6.jpg" },
-            { name: "焼きそば", image: "dish7.jpg" },
-            { name: "天ぷら", image: "dish8.jpg" }
-        ];
+        const foodItems = {
+            rice: [
+                { name: "肉じゃが", image: "bousai_nikujaga.png" },
+                { name: "ハンバーグ", image: "dish2.jpg" },
+                { name: "カレー", image: "food_curryrice_white.png" }
+            ],
+            noodles: [
+                { name: "うどん", image: "dish5.jpg" },
+                { name: "焼きそば", image: "dish7.jpg" }
+            ],
+            others: [
+                { name: "ピザ", image: "dish4.jpg" },
+                { name: "お寿司", image: "dish6.jpg" },
+                { name: "天ぷら", image: "dish8.jpg" }
+            ]
+        };
+
 
         const drinkItems = [
             { name: "ビール", image: "drink_beer.png" },
@@ -69,8 +76,8 @@
             { name: "カルピス", image: "drink8.jpg" }
         ];
 
+        let currentFoodCategory = 'rice';
         let foodPage = 0;
-        let drinkPage = 0;
         const itemsPerPage = 6;
 
         function renderItems(menu, items, page) {
@@ -82,35 +89,38 @@
                 const div = document.createElement("div");
                 div.className = "item";
                 div.innerHTML = `
-                    <img src="images/${menu}s/${itemData.image}" alt="${itemData.name}" width="100">
-                    <p>${itemData.name}</p>
-                    <button onclick="addToOrder('${itemData.name}')">選択</button>
-                `;
+            <img src="images/${menu}s/${itemData.image}" alt="${itemData.name}" width="100">
+            <p>${itemData.name}</p>
+            <button onclick="addToOrder('${itemData.name}')">選択</button>
+          `;
                 container.appendChild(div);
             });
             document.getElementById(menu + "Page").textContent = `ページ ${page + 1}`;
         }
 
+        function selectFoodCategory(category) {
+            currentFoodCategory = category;
+            foodPage = 0;
+            renderItems("food", foodItems[category], foodPage);
+        }
+
         function nextPage(menu) {
-            if (menu === "food" && (foodPage + 1) * itemsPerPage < foodItems.length) {
-                foodPage++;
-                renderItems("food", foodItems, foodPage);
-            } else if (menu === "drink" && (drinkPage + 1) * itemsPerPage < drinkItems.length) {
-                drinkPage++;
-                renderItems("drink", drinkItems, drinkPage);
+            if (menu === "food") {
+                const items = foodItems[currentFoodCategory];
+                if ((foodPage + 1) * itemsPerPage < items.length) {
+                    foodPage++;
+                    renderItems("food", items, foodPage);
+                }
             }
         }
 
         function prevPage(menu) {
             if (menu === "food" && foodPage > 0) {
                 foodPage--;
-                renderItems("food", foodItems, foodPage);
-            } else if (menu === "drink" && drinkPage > 0) {
-                drinkPage--;
-                renderItems("drink", drinkItems, drinkPage);
+                renderItems("food", foodItems[currentFoodCategory], foodPage);
             }
         }
-
+        
         function addToOrder(dish) {
             const orderList = document.getElementById('orderList');
 
