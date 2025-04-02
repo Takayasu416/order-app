@@ -4,68 +4,26 @@ body {
     color: #222;
     text-align: center;
     margin: 0;
-    padding: 20px;
-    font-size: 18px;
-    line-height: 1.6;
-}
-
-/* iPhoneや小さい画面用のスタイル */
-@media screen and (max-width: 768px) {
-    .main-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-    
-    .left-content, .right-content {
-        width: 100%;
-    }
-    
-    .tabs {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    h1 {
-        font-size: 32px;
-        margin-bottom: 15px;
-    }
-    
-    .order-list {
-        width: 90%;
-        margin: 0 auto;
-    }
-}
-
-h1 {
-    font-size: 40px;
-    font-weight: bold;
-    color: #388e3c;
-    margin-bottom: 30px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-
-h2 {
-    color: #2e7d32;
-    font-size: 28px;
+    padding: 10px;
+    font-size: 16px;
+    line-height: 1.5;
+    overflow: hidden; /* スクロールを抑制 */
 }
 
 .tabs {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 10px;
     justify-content: center;
 }
 
 .tab-button {
-    padding: 16px 32px;
-    margin: 0 10px 0 0;
+    padding: 10px 16px;
     cursor: pointer;
     border: none;
     background-color: #e0e0e0;
-    border-radius: 8px;
-    font-size: 18px;
+    border-radius: 6px;
+    font-size: 16px;
     transition: background-color 0.3s;
 }
 
@@ -89,26 +47,21 @@ h2 {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
 }
 
 .item {
     background-color: white;
     border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 20px;
-    width: 180px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-}
-
-.item:hover {
-    transform: translateY(-5px);
+    border-radius: 10px;
+    padding: 10px;
+    width: 140px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 .item img {
-    border-radius: 8px;
-    margin-bottom: 12px;
+    border-radius: 6px;
+    margin-bottom: 8px;
     width: 100%;
 }
 
@@ -116,11 +69,10 @@ h2 {
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 14px 20px;
-    font-size: 18px;
-    border-radius: 6px;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
 .item button:hover {
@@ -130,32 +82,33 @@ h2 {
 .order-list {
     background: #f5f5f5;
     border: 2px solid #4CAF50;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    font-size: 18px;
-    min-height: 200px;
+    border-radius: 14px;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    font-size: 16px;
+    min-height: 120px;
+    max-height: 180px;
+    overflow-y: auto;
 }
 
 .order-list div {
-    margin: 8px 0;
+    margin: 6px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .pagination {
-    margin-top: 20px;
+    margin-top: 10px;
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 10px;
 }
 
 .pagination button {
-    padding: 14px 28px;
-    font-size: 18px;
-    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 6px;
     border: 1px solid #ccc;
     background-color: #f0f0f0;
     cursor: pointer;
@@ -166,13 +119,13 @@ h2 {
 }
 
 button.order-button {
-    margin-top: 10px;
-    padding: 18px 36px;
-    font-size: 20px;
+    margin-top: 8px;
+    padding: 14px 24px;
+    font-size: 16px;
     background-color: #ff9800;
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
 }
 
@@ -199,7 +152,10 @@ button.order-button:hover {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 40px;
+    gap: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .left-content {
@@ -207,5 +163,40 @@ button.order-button:hover {
 }
 
 .right-content {
-    width: 340px;
+    width: 300px;
+}
+
+/* スマホやタブレットなど、画面幅が768px以下のとき */
+@media screen and (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        height: auto;
+    }
+
+    .left-content,
+    .right-content {
+        width: 100%;
+    }
+
+    .tabs {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .item {
+        width: 140px;
+    }
+
+    .order-list {
+        width: 90%;
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    button.order-button {
+        font-size: 18px;
+        padding: 14px 20px;
+    }
 }
