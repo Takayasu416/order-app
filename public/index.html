@@ -16,6 +16,7 @@
 
 <body>
     <div id="overlay">送信中...</div>
+    <h1>ご注文をどうぞ！</h1>
     <div class="main-container">
         <div class="left-content">
             <div class="tabs">
@@ -46,37 +47,21 @@
             <p id="statusMessage" style="margin-top: 20px; font-weight: bold;"></p>
         </div>
     </div>
-    <div class="tabs">
-        <button class="tab-button active" onclick="showMenu('food')">フード</button>
-        <button class="tab-button" onclick="showMenu('drink')">ドリンク</button>
-    </div>
-    <div class="sub-tabs">
-        <button onclick="selectFoodCategory('rice')">ご飯もの</button>
-        <button onclick="selectFoodCategory('noodles')">麺類</button>
-        <button onclick="selectFoodCategory('others')">その他</button>
-    </div>
     <script>
-        const foodItems = {
-            rice: [
-                { name: "肉じゃが", image: "bousai_nikujaga.png" },
-                { name: "ハンバーグ", image: "dish2.jpg" },
-                { name: "カレー", image: "food_curryrice_white.png" }
-            ],
-            noodles: [
-                { name: "うどん", image: "dish5.jpg" },
-                { name: "焼きそば", image: "dish7.jpg" }
-            ],
-            others: [
-                { name: "ピザ", image: "dish4.jpg" },
-                { name: "お寿司", image: "dish6.jpg" },
-                { name: "天ぷら", image: "dish8.jpg" }
-            ]
-        };
-
+        const foodItems = [
+            { name: "肉じゃが", image: "bousai_nikujaga.png" },
+            { name: "ハンバーグ", image: "dish2.jpg" },
+            { name: "カレー", image: "dish3.jpg" },
+            { name: "ピザ", image: "dish4.jpg" },
+            { name: "うどん", image: "dish5.jpg" },
+            { name: "お寿司", image: "dish6.jpg" },
+            { name: "焼きそば", image: "dish7.jpg" },
+            { name: "天ぷら", image: "dish8.jpg" }
+        ];
 
         const drinkItems = [
             { name: "ビール", image: "drink_beer.png" },
-            { name: "ほうじ茶", image: "tea_houjicha.png" },
+            { name: "コーラ", image: "drink2.jpg" },
             { name: "アイスコーヒー", image: "drink3.jpg" },
             { name: "緑茶", image: "drink4.jpg" },
             { name: "オレンジジュース", image: "drink5.jpg" },
@@ -85,8 +70,8 @@
             { name: "カルピス", image: "drink8.jpg" }
         ];
 
-        let currentFoodCategory = 'rice';
         let foodPage = 0;
+        let drinkPage = 0;
         const itemsPerPage = 6;
 
         function renderItems(menu, items, page) {
@@ -98,35 +83,32 @@
                 const div = document.createElement("div");
                 div.className = "item";
                 div.innerHTML = `
-            <img src="images/${menu}s/${itemData.image}" alt="${itemData.name}" width="100">
-            <p>${itemData.name}</p>
-            <button onclick="addToOrder('${itemData.name}')">選択</button>
-          `;
+                    <img src="images/${menu}s/${itemData.image}" alt="${itemData.name}" width="100">
+                    <p>${itemData.name}</p>
+                    <button onclick="addToOrder('${itemData.name}')">選択</button>
+                `;
                 container.appendChild(div);
             });
             document.getElementById(menu + "Page").textContent = `ページ ${page + 1}`;
         }
 
-        function selectFoodCategory(category) {
-            currentFoodCategory = category;
-            foodPage = 0;
-            renderItems("food", foodItems[category], foodPage);
-        }
-
         function nextPage(menu) {
-            if (menu === "food") {
-                const items = foodItems[currentFoodCategory];
-                if ((foodPage + 1) * itemsPerPage < items.length) {
-                    foodPage++;
-                    renderItems("food", items, foodPage);
-                }
+            if (menu === "food" && (foodPage + 1) * itemsPerPage < foodItems.length) {
+                foodPage++;
+                renderItems("food", foodItems, foodPage);
+            } else if (menu === "drink" && (drinkPage + 1) * itemsPerPage < drinkItems.length) {
+                drinkPage++;
+                renderItems("drink", drinkItems, drinkPage);
             }
         }
 
         function prevPage(menu) {
             if (menu === "food" && foodPage > 0) {
                 foodPage--;
-                renderItems("food", foodItems[currentFoodCategory], foodPage);
+                renderItems("food", foodItems, foodPage);
+            } else if (menu === "drink" && drinkPage > 0) {
+                drinkPage--;
+                renderItems("drink", drinkItems, drinkPage);
             }
         }
 
