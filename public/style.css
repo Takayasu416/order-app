@@ -7,7 +7,8 @@ body {
     padding: 10px;
     font-size: 16px;
     line-height: 1.5;
-    overflow: hidden; /* スクロールを抑制 */
+    overflow: hidden;
+    /* スクロールを抑制 */
 }
 
 .tabs {
@@ -199,4 +200,29 @@ button.order-button:hover {
         font-size: 18px;
         padding: 14px 20px;
     }
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+.tab-button {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    background-color: #f0f0f0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tab-button.active,
+.tab-button:hover {
+    background-color: #4CAF50;
+    color: white;
 }
