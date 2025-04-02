@@ -46,6 +46,15 @@
             <p id="statusMessage" style="margin-top: 20px; font-weight: bold;"></p>
         </div>
     </div>
+    <div class="tabs">
+        <button class="tab-button active" onclick="showMenu('food')">フード</button>
+        <button class="tab-button" onclick="showMenu('drink')">ドリンク</button>
+    </div>
+    <div class="sub-tabs">
+        <button onclick="selectFoodCategory('rice')">ご飯もの</button>
+        <button onclick="selectFoodCategory('noodles')">麺類</button>
+        <button onclick="selectFoodCategory('others')">その他</button>
+    </div>
     <script>
         const foodItems = {
             rice: [
@@ -120,7 +129,7 @@
                 renderItems("food", foodItems[currentFoodCategory], foodPage);
             }
         }
-        
+
         function addToOrder(dish) {
             const orderList = document.getElementById('orderList');
 
