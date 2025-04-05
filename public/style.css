@@ -182,7 +182,7 @@ button.order-button:hover {
     }
 
     .tabs {
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
