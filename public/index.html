@@ -16,7 +16,6 @@
 
 <body>
     <div id="overlay">送信中...</div>
-    <h1>ご注文をどうぞ！</h1>
     <div class="main-container">
         <div class="left-content">
             <div class="tabs">
@@ -49,26 +48,31 @@
     </div>
     <script>
         const foodItems = [
-            { name: "肉じゃが", image: "s-nikujaga_01.png" },
-            { name: "ポトフ", image: "dish2.jpg" },
-            { name: "カレー", image: "food_curryrice_white.jpg" },
-            { name: "ピザ", image: "dish4.jpg" },
-            { name: "うどん", image: "dish5.jpg" },
-            { name: "お寿司", image: "dish6.jpg" },
-            { name: "焼きそば", image: "dish7.jpg" },
-            { name: "天ぷら", image: "dish8.jpg" }
+            { id: 1, name: "肉じゃが", image: "s-nikujaga_01.png", genre: "和食" },
+            { id: 2, name: "ポトフ", image: "s-potofu.png", genre: "洋食" },
+            { id: 3, name: "カレー", image: "food_curryrice_white.png", genre: "洋食" },
+            { id: 4, name: "豚キムチ", image: "s-buta_kimuchi.png", genre: "中華" },
+            { id: 5, name: "うどん", image: "s-food_udon_kake.png", genre: "和食" },
+            { id: 6, name: "チャーハン", image: "s-cha-han1.png", genre: "中華" },
+            { id: 7, name: "焼きそば", image: "s-food_yakisoba.png", genre: "中華" },
+            { id: 8, name: "お好み焼き", image: "s-omatsuri_okonomiyaki.png", genre: "和食" },
+            { id: 9, name: "準備中", image: "dish7.jpg", genre: "中華" },
+            { id: 10, name: "準備中", image: "dish8.jpg", genre: "和食" },
+            { id: 11, name: "準備中", image: "dish7.jpg", genre: "中華" },
+            { id: 12, name: "準備中", image: "dish8.jpg", genre: "和食" }
         ];
 
         const drinkItems = [
-            { name: "ビール", image: "drink_beer.png" },
-            { name: "ほうじ茶", image: "tea_houjicha.jpg" },
-            { name: "アイスコーヒー", image: "drink3.jpg" },
-            { name: "緑茶", image: "drink4.jpg" },
-            { name: "オレンジジュース", image: "drink5.jpg" },
-            { name: "ミネラルウォーター", image: "drink6.jpg" },
-            { name: "レモネード", image: "drink7.jpg" },
-            { name: "カルピス", image: "drink8.jpg" }
+            { id: 1, name: "ミネラルウォーター", image: "s-amount_water_glass3.png", genre: "ソフトドリンク" },
+            { id: 2, name: "ほうじ茶", image: "tea_houjicha.png", genre: "ソフトドリンク" },
+            { id: 3, name: "アイスコーヒー", image: "s-coffee10_iced_coffee.png", genre: "ソフトドリンク" },
+            { id: 4, name: "ホットコーヒー", image: "s-coffee01_blend.png", genre: "ソフトドリンク" },
+            { id: 5, name: "アップルジュース", image: "s-juice_apple.png", genre: "ソフトドリンク" },
+            { id: 6, name: "麦茶", image: "s-drink_mugicha_glass.png", genre: "ソフトドリンク" },
+            { id: 7, name: "カルピス", image: "drink8.jpg", genre: "ソフトドリンク" },
+            { id: 8, name: "ビール", image: "drink_beer.png", genre: "アルコール" }
         ];
+
 
         let foodPage = 0;
         let drinkPage = 0;
@@ -89,7 +93,9 @@
                 `;
                 container.appendChild(div);
             });
-            document.getElementById(menu + "Page").textContent = `ページ ${page + 1}`;
+            const totalPages = Math.ceil(items.length / itemsPerPage);
+            document.getElementById(menu + "Page").textContent = `ページ${page + 1}/${totalPages}`;
+
         }
 
         function nextPage(menu) {
@@ -145,41 +151,41 @@
 
         function placeOrder() {
             const orderList = document.querySelectorAll('#orderList div span');
-            const order = Array.from(orderList).map(item => item.textContent).join('\n');
+            const order = Array.from(orderList)
+                .map(item => `・${item.textContent}`)
+                .join('\n');
 
-            const statusMessage = document.getElementById('statusMessage');
-            const overlay = document.getElementById('overlay');
-            statusMessage.textContent = '';
+            const timestamp = new Date().toLocaleString('ja-JP');
+            const message = `▼ ご注文内容\n\n${order}\n\n■ 注文日時:\n${timestamp}`;
 
             if (order === '') {
                 alert('注文リストが空です。');
                 return;
             }
 
-            overlay.style.display = 'flex';
+            document.getElementById('overlay').style.display = 'flex';
 
             fetch('/send-order', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ order })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order: message })
             })
                 .then(res => res.text())
                 .then(msg => {
                     alert(msg);
                     document.getElementById('orderList').innerHTML = '';
-                    statusMessage.textContent = '送信完了！';
+                    document.getElementById('statusMessage').textContent = '送信完了！';
                 })
                 .catch(err => {
                     console.error(err);
                     alert('送信失敗: ' + err);
-                    statusMessage.textContent = '送信に失敗しました';
+                    document.getElementById('statusMessage').textContent = '送信に失敗しました';
                 })
                 .finally(() => {
-                    overlay.style.display = 'none';
+                    document.getElementById('overlay').style.display = 'none';
                 });
         }
+
 
 
         function showMenu(menu) {
