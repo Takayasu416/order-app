@@ -47,14 +47,16 @@ app.post('/send-order', (req, res) => {
   });
 });
 
-// render設定
-/* 
+// render設定 
 app.listen(port, () => {
   console.log(`サーバー起動中: http://localhost:${port}`);
 });
-*/
 
+
+// railway対応
+/*
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+*/
